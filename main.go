@@ -14,14 +14,16 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
 	flag "github.com/spf13/pflag"
-	"golang.org/x/sys/unix"
 )
 
 var (
-	uploadDir  = flag.StringP("dir", "d", ".", "directory to store uploaded files")
-	listenPort = flag.Int16P("port", "p", 8080, "port to listen on")
-	webPath    = flag.StringP("web-path", "", "", "web path for upload page")
+	showVersion = flag.BoolP("version", "v", false, "show version")
+	uploadDir   = flag.StringP("dir", "d", ".", "directory to store uploaded files")
+	listenPort  = flag.Int16P("port", "p", 8080, "port to listen on")
+	webPath     = flag.StringP("web-path", "", "", "web path for upload page")
 )
+
+var version = "dev"
 
 //go:embed public/index.html
 var webContent string
@@ -30,6 +32,11 @@ func main() {
 	flag.Lookup("web-path").NoOptDefVal = "/"
 
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Println("simplehttpserver", version)
+		os.Exit(0)
+	}
 
 	if err := checkUploadDir(*uploadDir); err != nil {
 		slog.Error("upload check failed", "err", err)
@@ -122,8 +129,8 @@ func checkUploadDir(dir string) error {
 			return fmt.Errorf("-d path exists but is not a directory: %s\n", dir)
 		}
 		// Check read/write permissions
-		if err := unix.Access(dir, unix.W_OK|unix.R_OK); err != nil {
-			return fmt.Errorf("-d path lacks read/write permission: %s\n", dir)
+		if err := checkDirReadWrite(dir); err != nil {
+			return fmt.Errorf("-d path lacks read/write permission: %s: %v\n", dir, err)
 		}
 	} else if os.IsNotExist(err) {
 		// Path doesn't exist, create it
