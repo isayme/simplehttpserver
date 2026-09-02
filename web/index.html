@@ -1,13 +1,38 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>web</title>
+    <title>文件上传</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="header">
+        <h1>文件上传</h1>
+        <p>拖拽文件到下方区域，或点击选择文件</p>
+      </div>
+
+      <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="上传文件区域">
+        <div class="icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+        </div>
+        <div class="title">拖拽文件到这里，或 <span>浏览文件</span></div>
+        <div class="hint">支持多个文件，单个文件最大 50 MB</div>
+        <input type="file" id="fileInput" multiple />
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+
+      <div class="actions hidden" id="actions">
+        <button class="btn" id="clearBtn">清空列表</button>
+        <button class="btn primary" id="uploadBtn">开始上传</button>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

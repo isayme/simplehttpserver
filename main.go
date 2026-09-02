@@ -25,7 +25,7 @@ var (
 
 var version = "dev"
 
-//go:embed public/index.html
+//go:embed web/dist/index.html
 var webContent string
 
 func main() {
