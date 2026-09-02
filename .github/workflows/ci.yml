@@ -23,20 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 10
-      - run: pnpm install
+      
 
-      - name: Build
-        run: pnpm build
-
-  build-go:
-    needs: [build-web]
+  build:
     runs-on: ubuntu-latest
 
     strategy:
@@ -51,11 +40,22 @@ jobs:
         with:
           go-version: '${{ matrix.go-version }}'
 
-      - name: Build
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - name: Build Web
+        run: cd web && pnpm install && pnpm build
+
+      - name: Build Go
         run: mkdir -p dist && go build -o ./dist/simplehttpserver
 
   dependabot:
-    needs: [build-go, build-web]
+    needs: [build]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
