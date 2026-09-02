@@ -9,22 +9,6 @@ on:
     branches: [ master ]
 
 jobs:
-  build-web:
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./web
-
-    strategy:
-      matrix:
-        node-version: [24]
-
-    steps:
-      - uses: actions/checkout@v7
-
-      
-
   build:
     runs-on: ubuntu-latest
 

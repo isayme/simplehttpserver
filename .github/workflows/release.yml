@@ -52,6 +52,17 @@ jobs:
         with:
           go-version: "1.26"
 
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - name: Build Web
+        run: cd web && pnpm install && pnpm build
+
       - name: Build
         run: |
           mkdir -p dist
